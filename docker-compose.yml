@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  estudiante:
+    build: ./estudiante
+    ports:
+      - "5000:5000"
+    container_name: micro_estudiante
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://admin:admin@db:5432/microservicios
+
+  evaluacion:
+    build: ./evaluacion
+    ports:
+      - "5001:5001"
+    container_name: micro_evaluacion
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://admin:admin@db:5432/microservicios
+
+  db:
+    image: postgres:15
+    container_name: micro_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: microservicios
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
